@@ -69,8 +69,9 @@ tcache_event_hard(tsd_t *tsd, tcache_t *tcache) {
 				tcache->lg_fill_div[binind]++;
 			}
 		} else {
-			tcache_bin_flush_large(tsd, tbin, binind, tbin->ncached
-			    - tbin->low_water + (tbin->low_water >> 2), tcache);
+			tcache_bin_flush_large(tsd, tcache, tbin, binind,
+			    tbin->ncached - tbin->low_water + (tbin->low_water
+			    >> 2));
 		}
 	} else if (tbin->low_water < 0) {
 		/*
@@ -235,8 +236,8 @@ tcache_bin_flush_small(tsd_t *tsd, tcache_t *tcache, cache_bin_t *tbin,
 }
 
 void
-tcache_bin_flush_large(tsd_t *tsd, cache_bin_t *tbin, szind_t binind,
-    unsigned rem, tcache_t *tcache) {
+tcache_bin_flush_large(tsd_t *tsd, tcache_t *tcache, cache_bin_t *tbin, szind_t binind,
+    unsigned rem) {
 #if defined(ANDROID_ENABLE_TCACHE_STATS)
 	bool merged_stats = false;
 #endif
@@ -538,7 +539,7 @@ tcache_flush_cache(tsd_t *tsd, tcache_t *tcache) {
 	}
 	for (unsigned i = SC_NBINS; i < nhbins; i++) {
 		cache_bin_t *tbin = tcache_large_bin_get(tcache, i);
-		tcache_bin_flush_large(tsd, tbin, i, 0, tcache);
+		tcache_bin_flush_large(tsd, tcache, tbin, i, 0);
 
 #if defined(ANDROID_ENABLE_TCACHE_STATS)
 		if (config_stats) {
