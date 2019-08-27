@@ -2659,7 +2659,8 @@ prof_active_ctl(tsd_t *tsd, const size_t *mib, size_t miblen,
 	bool oldval;
 
 	if (!config_prof) {
-		return ENOENT;
+		ret = ENOENT;
+		goto label_return;
 	}
 
 	if (newp != NULL) {
@@ -2667,7 +2668,12 @@ prof_active_ctl(tsd_t *tsd, const size_t *mib, size_t miblen,
 			ret = EINVAL;
 			goto label_return;
 		}
-		oldval = prof_active_set(tsd_tsdn(tsd), *(bool *)newp);
+		bool val = *(bool *)newp;
+		if (!opt_prof && val) {
+			ret = ENOENT;
+			goto label_return;
+		}
+		oldval = prof_active_set(tsd_tsdn(tsd), val);
 	} else {
 		oldval = prof_active_get(tsd_tsdn(tsd));
 	}
