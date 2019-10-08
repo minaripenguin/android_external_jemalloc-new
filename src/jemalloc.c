@@ -2395,7 +2395,7 @@ je_malloc(size_t size) {
 
 	cache_bin_t *bin = tcache_small_bin_get(tcache, ind);
 	bool tcache_success;
-	void *ret = cache_bin_alloc_easy(bin, &tcache_success, ind);
+	void *ret = cache_bin_alloc_easy_reduced(bin, &tcache_success);
 
 	if (tcache_success) {
 #if defined(ANDROID_ENABLE_TCACHE_STATS)
