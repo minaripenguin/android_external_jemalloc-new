@@ -2411,9 +2411,6 @@ je_malloc(size_t size) {
 			bin->tstats.nrequests++;
 		}
 #endif
-		if (config_prof) {
-			tcache->prof_accumbytes += usize;
-		}
 
 		LOG("core.malloc.exit", "result: %p", ret);
 
