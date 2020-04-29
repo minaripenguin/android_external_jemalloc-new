@@ -32,9 +32,6 @@ large_palloc(tsdn_t *tsdn, arena_t *arena, size_t usize, size_t alignment,
 		return NULL;
 	}
 
-	if (config_fill && unlikely(opt_zero)) {
-		zero = true;
-	}
 	if (likely(!tsdn_null(tsdn))) {
 #if defined(__BIONIC__) && !defined(__LP64__) && !defined(JEMALLOC_JET) && !defined(JEMALLOC_INTEGRATION_TEST)
 		/* On 32 bit systems, using a per arena cache can exhaust
