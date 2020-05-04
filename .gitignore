@@ -51,6 +51,11 @@
 /test/unit/*.[od]
 /test/unit/*.out
 
+/test/analyze/[A-Za-z]*
+!/test/analyze/[A-Za-z]*.*
+/test/analyze/*.[od]
+/test/analyze/*.out
+
 /VERSION
 
 *.pdb
