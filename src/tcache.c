@@ -37,6 +37,12 @@ unsigned opt_tcache_nslots_large = 20;
  */
 ssize_t	opt_lg_tcache_nslots_mul = -1;
 
+/*
+ * Number of allocation bytes between tcache incremental GCs.  Again, this
+ * default just seems to work well; more tuning is possible.
+ */
+size_t opt_tcache_gc_incr_bytes = 65536;
+
 cache_bin_info_t	*tcache_bin_info;
 
 /* Total stack size required (per tcache).  Include the padding above. */
@@ -66,7 +72,7 @@ tcache_salloc(tsdn_t *tsdn, const void *ptr) {
 
 uint64_t
 tcache_gc_new_event_wait(tsd_t *tsd) {
-	return TCACHE_GC_INCR_BYTES;
+	return opt_tcache_gc_incr_bytes;
 }
 
 uint64_t
@@ -76,7 +82,7 @@ tcache_gc_postponed_event_wait(tsd_t *tsd) {
 
 uint64_t
 tcache_gc_dalloc_new_event_wait(tsd_t *tsd) {
-	return TCACHE_GC_INCR_BYTES;
+	return opt_tcache_gc_incr_bytes;
 }
 
 uint64_t
