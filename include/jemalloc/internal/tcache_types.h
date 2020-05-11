@@ -17,13 +17,6 @@ typedef struct tcaches_s tcaches_t;
 #define TCACHE_STATE_PURGATORY		((tcache_t *)(uintptr_t)3)
 #define TCACHE_STATE_MAX		TCACHE_STATE_PURGATORY
 
-/* (1U << opt_lg_tcache_max) is used to compute tcache_maxclass. */
-#if defined(ANDROID_LG_TCACHE_MAXCLASS_DEFAULT)
-#define LG_TCACHE_MAXCLASS_DEFAULT	ANDROID_LG_TCACHE_MAXCLASS_DEFAULT
-#else
-#define LG_TCACHE_MAXCLASS_DEFAULT	15
-#endif
-
 /* Number of allocation bytes between tcache incremental GCs. */
 #define TCACHE_GC_INCR_BYTES 65536U
 
