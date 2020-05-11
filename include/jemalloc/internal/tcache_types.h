@@ -17,35 +17,6 @@ typedef struct tcaches_s tcaches_t;
 #define TCACHE_STATE_PURGATORY		((tcache_t *)(uintptr_t)3)
 #define TCACHE_STATE_MAX		TCACHE_STATE_PURGATORY
 
-/*
- * Absolute minimum number of cache slots for each small bin.
- */
-#if defined(ANDROID_TCACHE_NSLOTS_SMALL_MIN)
-#define TCACHE_NSLOTS_SMALL_MIN		ANDROID_TCACHE_NSLOTS_SMALL_MIN
-#else
-#define TCACHE_NSLOTS_SMALL_MIN		20
-#endif
-
-/*
- * Absolute maximum number of cache slots for each small bin in the thread
- * cache.  This is an additional constraint beyond that imposed as: twice the
- * number of regions per slab for this size class.
- *
- * This constant must be an even number.
- */
-#if defined(ANDROID_TCACHE_NSLOTS_SMALL_MAX)
-#define TCACHE_NSLOTS_SMALL_MAX		ANDROID_TCACHE_NSLOTS_SMALL_MAX
-#else
-#define TCACHE_NSLOTS_SMALL_MAX		200
-#endif
-
-/* Number of cache slots for large size classes. */
-#if defined(ANDROID_TCACHE_NSLOTS_LARGE)
-#define TCACHE_NSLOTS_LARGE		ANDROID_TCACHE_NSLOTS_LARGE
-#else
-#define TCACHE_NSLOTS_LARGE		20
-#endif
-
 /* (1U << opt_lg_tcache_max) is used to compute tcache_maxclass. */
 #if defined(ANDROID_LG_TCACHE_MAXCLASS_DEFAULT)
 #define LG_TCACHE_MAXCLASS_DEFAULT	ANDROID_LG_TCACHE_MAXCLASS_DEFAULT
