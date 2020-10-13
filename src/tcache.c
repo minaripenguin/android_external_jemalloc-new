@@ -778,7 +778,7 @@ static bool
 tcaches_create_prep(tsd_t *tsd, base_t *base) {
 	bool err;
 
-	malloc_mutex_lock(tsd_tsdn(tsd), &tcaches_mtx);
+	malloc_mutex_assert_owner(tsd_tsdn(tsd), &tcaches_mtx);
 
 	if (tcaches == NULL) {
 		tcaches = base_alloc(tsd_tsdn(tsd), base,
@@ -796,7 +796,6 @@ tcaches_create_prep(tsd_t *tsd, base_t *base) {
 
 	err = false;
 label_return:
-	malloc_mutex_unlock(tsd_tsdn(tsd), &tcaches_mtx);
 	return err;
 }
 
@@ -805,6 +804,8 @@ tcaches_create(tsd_t *tsd, base_t *base, unsigned *r_ind) {
 	witness_assert_depth(tsdn_witness_tsdp_get(tsd_tsdn(tsd)), 0);
 
 	bool err;
+
+	malloc_mutex_lock(tsd_tsdn(tsd), &tcaches_mtx);
 
 	if (tcaches_create_prep(tsd, base)) {
 		err = true;
@@ -818,7 +819,6 @@ tcaches_create(tsd_t *tsd, base_t *base, unsigned *r_ind) {
 	}
 
 	tcaches_t *elm;
-	malloc_mutex_lock(tsd_tsdn(tsd), &tcaches_mtx);
 	if (tcaches_avail != NULL) {
 		elm = tcaches_avail;
 		tcaches_avail = tcaches_avail->next;
@@ -830,10 +830,10 @@ tcaches_create(tsd_t *tsd, base_t *base, unsigned *r_ind) {
 		*r_ind = tcaches_past;
 		tcaches_past++;
 	}
-	malloc_mutex_unlock(tsd_tsdn(tsd), &tcaches_mtx);
 
 	err = false;
 label_return:
+	malloc_mutex_unlock(tsd_tsdn(tsd), &tcaches_mtx);
 	witness_assert_depth(tsdn_witness_tsdp_get(tsd_tsdn(tsd)), 0);
 	return err;
 }
