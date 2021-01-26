@@ -16,6 +16,11 @@
 #ifdef __NetBSD__
 #include <sys/bitops.h>	/* ilog2 */
 #endif
+#ifdef JEMALLOC_HAVE_VM_MAKE_TAG
+#define PAGES_FD_TAG VM_MAKE_TAG(101U)
+#else
+#define PAGES_FD_TAG -1
+#endif
 
 /******************************************************************************/
 /* Defines/includes needed for special android code. */
@@ -148,7 +153,7 @@ os_pages_map(void *addr, size_t size, size_t alignment, bool *commit) {
 #endif
 		int prot = *commit ? PAGES_PROT_COMMIT : PAGES_PROT_DECOMMIT;
 
-		ret = mmap(addr, size, prot, mmap_flags, -1, 0);
+		ret = mmap(addr, size, prot, mmap_flags, PAGES_FD_TAG, 0);
 	}
 	assert(ret != NULL);
 
@@ -340,7 +345,7 @@ pages_commit_impl(void *addr, size_t size, bool commit) {
 	{
 		int prot = commit ? PAGES_PROT_COMMIT : PAGES_PROT_DECOMMIT;
 		void *result = mmap(addr, size, prot, mmap_flags | MAP_FIXED,
-		    -1, 0);
+		    PAGES_FD_TAG, 0);
 		if (result == MAP_FAILED) {
 			return true;
 		}
