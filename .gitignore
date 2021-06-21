@@ -32,6 +32,7 @@
 /test/test.sh
 
 /test/integration/[A-Za-z]*
+!/test/integration/cpp/
 !/test/integration/[A-Za-z]*.*
 /test/integration/*.[od]
 /test/integration/*.out
